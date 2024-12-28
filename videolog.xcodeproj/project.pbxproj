@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		76EFA2032D20B1C000AF0021 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 76EFA2022D20B1C000AF0021 /* Photos.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		7691FE482D1F873600E75185 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		7691FE372D1F873400E75185 /* videolog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = videolog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7691FE472D1F873600E75185 /* videologTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = videologTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7691FE512D1F873600E75185 /* videologUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = videologUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		76EFA2022D20B1C000AF0021 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76EFA2032D20B1C000AF0021 /* Photos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +84,7 @@
 				7691FE392D1F873400E75185 /* videolog */,
 				7691FE4A2D1F873600E75185 /* videologTests */,
 				7691FE542D1F873600E75185 /* videologUITests */,
+				76EFA2012D20B1C000AF0021 /* Frameworks */,
 				7691FE382D1F873400E75185 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +97,14 @@
 				7691FE512D1F873600E75185 /* videologUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		76EFA2012D20B1C000AF0021 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				76EFA2022D20B1C000AF0021 /* Photos.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,6 +210,8 @@
 			);
 			mainGroup = 7691FE2E2D1F873400E75185;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7691FE382D1F873400E75185 /* Products */;
 			projectDirPath = "";
@@ -399,6 +416,7 @@
 				DEVELOPMENT_TEAM = SNNBD7DE59;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Allow VideoLog to access Photos?";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -428,6 +446,7 @@
 				DEVELOPMENT_TEAM = SNNBD7DE59;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Allow VideoLog to access Photos?";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
