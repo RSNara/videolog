@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Photos
+import PhotosUI
 import CoreLocation
 import AVFoundation
 import Foundation
@@ -32,22 +33,18 @@ class PhotosManager: ObservableObject {
     let fetchOptions = PHFetchOptions()
     let fetchResults = PHAsset.fetchAssets(with: .video, options: fetchOptions)
     
+    let sixMonthsAgo = Calendar.current.date(byAdding: .month, value: -6, to: Date())
     var nearbyAssets: [PHAsset] = []
-    var components = DateComponents()
-    components.year = 2024
-    components.month = 12
-    components.day = 1
-    
-    let dec22nd2024 = Calendar.current.date(from: components)!
     
     fetchResults.enumerateObjects { asset, _, _ in
       if let location = asset.location {
         let assetLocation = CLLocation(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         let distance = studioLocation.distance(from: assetLocation)
         
-        let assetDate = asset.creationDate
-        if assetDate != nil && dec22nd2024 < assetDate! && distance <= studio.radius {
-          nearbyAssets.append(asset)
+        if let creationDate = asset.creationDate {
+          if creationDate >= (sixMonthsAgo ?? Date.distantPast) && distance <= studio.radius {
+            nearbyAssets.append(asset)
+          }
         }
       }
     }
@@ -72,13 +69,60 @@ struct Studio: Identifiable, Hashable {
   }
 }
 
+struct AssetThumbnailView: View {
+  let asset: PHAsset
+  @State private var thumbnail: UIImage? = nil
+
+  var body: some View {
+    Group {
+      if let thumbnail = thumbnail {
+        Image(uiImage: thumbnail)
+          .frame(width: 100, height: 100)
+      } else {
+        Rectangle()
+          .fill(Color.gray)
+          .frame(width:100, height: 100)
+          .overlay(Text("Loading...").foregroundColor(.white))
+      }
+    }
+    .onAppear {
+        fetchThumbnail(for: asset)
+    }
+  }
+
+  private func fetchThumbnail(for asset: PHAsset) {
+    let imageManager = PHImageManager.default()
+    let targetSize = CGSize(width: 100, height: 100) // Thumbnail size
+    let options = PHImageRequestOptions()
+    options.deliveryMode = .highQualityFormat
+    options.resizeMode = .fast
+    options.isSynchronous = false
+    options.isNetworkAccessAllowed = true
+
+    imageManager.requestImage(
+      for: asset,
+      targetSize: targetSize,
+      contentMode: .aspectFill,
+      options: options)
+    { image, info in
+      if let image = image {
+        DispatchQueue.main.async {
+            self.thumbnail = image
+        }
+      }
+    }
+  }
+}
+
 class GlobalStore: ObservableObject {
-  @Published var studios: [Studio] = [Studio(
-    name: "Inspiration Studios",
-    latitude: 37.484778,
-    longitude: -122.228150,
-    radius: 1000
-  )]
+  @Published var studios: [Studio] = [
+    Studio(
+      name: "Inspiration Studios",
+      latitude: 37.47567,
+      longitude: -122.21316,
+      radius: 100
+    )
+  ]
 }
 
 struct ContentView: View {
@@ -113,14 +157,27 @@ struct ContentView: View {
 struct VideoLogsView: View {
   @EnvironmentObject private var photosManager: PhotosManager
   let studio: Studio
+  let columns = [
+    GridItem(.fixed(100)),
+    GridItem(.fixed(100)),
+    GridItem(.fixed(100)),
+    GridItem(.fixed(100))
+  ]
+  
   var body: some View {
-    VStack {
-      if let videos = photosManager.videoMap[studio] {
-        if (!videos.isEmpty) {
-          Video(video:videos[0])
+    NavigationView {
+      ScrollView {
+        LazyVGrid(columns: columns) { // Create the grid
+          if let videos = photosManager.videoMap[studio] {
+            ForEach(videos, id: \.self) { video in
+              AssetThumbnailView(asset: video)
+                .padding()
+            }
+          }
         }
-      } else {
-        Text("Could not fetch videos")
+      }
+      .safeAreaInset(edge: .top) {
+        Color.clear.frame(height: 11) // Add a spacer to clear navigation bar
       }
     }
     .navigationTitle(studio.name)
