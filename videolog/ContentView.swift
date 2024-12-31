@@ -74,7 +74,9 @@ struct AssetThumbnailView: View {
   @State private var thumbnail: UIImage? = nil
 
   var body: some View {
-    Group {
+    Button(action: {
+      print("Logging image")
+    }) {
       if let thumbnail = thumbnail {
         Image(uiImage: thumbnail)
           .frame(width: 100, height: 100)
